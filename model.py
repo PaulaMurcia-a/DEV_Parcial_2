@@ -1,29 +1,38 @@
-from sqlmodel import Field, SQLModel
-
 from datetime import datetime
+from typing import Optional
+
+from sqlmodel import SQLModel, Field
 
 
-class Dog(SQLModel, table = True):
-    __tablename__ = "Dogs"
+class DogBase(SQLModel):
+    name: str
+    size: str
+    dangerous: bool
+    sterilized: bool
+    breed: str
 
-    created: datetime = Field(
-        default_factory=datetime.utcnow(),
-        sa_column_kwargs={"server_default": "NOW()"}
+
+class Dog(DogBase, table=True):
+    __tablename__ = "dogs"
+
+    id: Optional[int] = Field(
+        default=None,
+        primary_key=True
     )
 
-class Sticker(SQLModel, table = True):
-    __tablename__ = "Stickers"
-
     created: datetime = Field(
-        default_factory=datetime.utcnow(),
-        sa_column_kwargs={"server_default": "NOW()"}
+        default_factory=datetime.utcnow,
+        nullable=False
     )
 
 
-class Book(SQLModel, table = True):
-    __tablename__ = "Books"
+class DogCreate(DogBase):
+    pass
 
-    created: datetime = Field(
-        default_factory=datetime.utcnow(),
-        sa_column_kwargs={"server_default": "NOW()"}
-    )
+
+class DogUpdate(SQLModel):
+    name: Optional[str] = None
+    size: Optional[str] = None
+    dangerous: Optional[bool] = None
+    sterilized: Optional[bool] = None
+    breed: Optional[str] = None
